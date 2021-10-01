@@ -15,13 +15,38 @@ library(haven)
 ```{r}
 trash_df = read_excel("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet = "Mr. Trash Wheel",range = cell_cols("A:N")) #rows?
 
-#tidying data set
+#tidying trash data set
 trash_tidy = 
   trash_df %>% 
   janitor::clean_names() %>% 
-  drop_na(,dumpster) %>% 
+  drop_na(dumpster) %>% 
   rename(weight = weight_tons ,volume = volume_cubic_yards) %>% 
   mutate(sports_balls = round(sports_balls,0))
-          
+
+#2019 precipitation
+precipitation19_df = read_excel("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",sheet = "2019 Precipitation", range = "A2:B14")
+
+#tidy 2019 precipitation data
+tidy_2019_df =
+  precipitation19_df %>% 
+  janitor::clean_names() %>% 
+  drop_na(total) %>% 
+  mutate(year = 2019)
+  
+#2018 precipitation
+precipitation18_df = read_excel("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",sheet = "2018 Precipitation", range = "A2:B14")
+
+#tidy 2018 precipitation data
+tidy_2018_df =
+  precipitation19_df %>% 
+  janitor::clean_names() %>% 
+  drop_na(total) %>% 
+  mutate(year = 2018)  
+
+#combine precipitation data set
+preciptation = 
+  bind_rows(tidy_2019_df,tidy_2019_df) %>% 
+  mutate(month=month.name)
+         
 ```
 
