@@ -10,3 +10,18 @@ library(tidyverse)
 library(readxl)
 library(haven)
 ```
+
+# Problem 1
+```{r}
+trash_df = read_excel("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet = "Mr. Trash Wheel",range = cell_cols("A:N")) #rows?
+
+#tidying data set
+trash_tidy = 
+  trash_df %>% 
+  janitor::clean_names() %>% 
+  drop_na(,dumpster) %>% 
+  rename(weight = weight_tons ,volume = volume_cubic_yards) %>% 
+  mutate(sports_balls = round(sports_balls,0))
+          
+```
+
