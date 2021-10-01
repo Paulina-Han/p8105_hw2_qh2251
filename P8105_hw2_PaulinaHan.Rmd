@@ -1,0 +1,12 @@
+---
+title: "P8105_hw2_PaulinaHan"
+author: "Paulina Han"
+date: "2021/10/1"
+output: github_document
+---
+
+```{r, echo=FALSE, message=FALSE}
+library(tidyverse)
+library(readxl)
+library(haven)
+```
