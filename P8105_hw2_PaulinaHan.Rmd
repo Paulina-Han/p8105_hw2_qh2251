@@ -108,6 +108,17 @@ snp_tidy =
   select(-day) #year is odd
  
 
+#read unemployment data
+unemployment = read_csv("./data/fivethirtyeight_datasets/fivethirtyeight_datasets/unemployment.csv")
+
+#clean unemployment data
+une_tidy = 
+  unemployment %>% 
+   janitor::clean_names() %>% 
+  pivot_longer(
+    bdi_score_bl:bdi_score_12m,
+    names_to = "visit", 
+    values_to = "bdi")
 
   
   
