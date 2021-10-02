@@ -95,9 +95,20 @@ pols_tidy =
   mutate(president = prez_gop + prez_dem) %>% 
   select(-prez_gop,-prez_dem,-day)
   
-  
-  
-  
+#read snp.csv
+snp = read_csv("./data/fivethirtyeight_datasets/fivethirtyeight_datasets/snp.csv")
+
+#clean pols-month data
+snp_tidy = 
+ snp %>% 
+  janitor::clean_names() %>% 
+  separate(date, into = c("day","month","year")) %>% 
+  mutate(month=month.name[as.numeric(month)]) %>% 
+  relocate(year,month) %>% 
+  select(-day) #year is odd
+ 
+
+
   
   
 
