@@ -125,3 +125,54 @@ une_tidy =
 
 ```
 
+
+
+# Problem 3
+
+```{r}
+#read baby names data
+baby = read_csv("./data/Popular_Baby_Names.csv")
+
+#tidy baby data set
+baby_tidy = 
+   baby %>% 
+   janitor::clean_names() %>% 
+   mutate(gender = str_to_lower(gender), ethnicity = str_to_lower(ethnicity)) %>% 
+  mutate(
+    ethnicity=replace(ethnicity,ethnicity == 'asian and paci','asian and pacific islander'),
+     ethnicity=replace(ethnicity,ethnicity == 'black non hisp','black non hispanic'),
+    ethnicity=replace(ethnicity,ethnicity == 'white non hisp','white non hispanic') ) %>% 
+  distinct()
+
+# show Olivia's population in times
+
+Olivia = 
+  baby_tidy %>% 
+  filter(childs_first_name == 'Olivia') %>% 
+  select(year_of_birth, ethnicity, rank) %>% 
+  pivot_wider(
+  names_from = "year_of_birth", 
+  values_from = "rank") %>% 
+relocate(ethnicity,'2013','2014','2015','2016') %>% 
+ knitr::kable()
+
+Olivia
+
+#male popular name 
+boy =
+  baby_tidy %>% 
+  filter(gender == 'male') %>% 
+  filter(childs_first_name == "Ethan") %>% 
+select(year_of_birth, ethnicity, rank) %>% 
+  pivot_wider(
+  names_from = "year_of_birth", 
+  values_from = "rank") %>% 
+relocate(ethnicity,'2013','2014','2015','2016') %>% 
+ knitr::kable()
+#Ethan
+boy
+ 
+
+
+```
+
