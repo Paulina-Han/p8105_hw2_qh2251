@@ -39,7 +39,7 @@ tidy_2018_df =
 #combine precipitation data set
 preciptation = 
   bind_rows(tidy_2018_df,tidy_2019_df) %>% 
-  mutate(month=month.name)
+ mutate(month=month.name[month])
 
 #description 
 #data set 1
@@ -79,3 +79,31 @@ rows. 2018 March had the most preciptation in 2018 and 2019 which is
 4.47.
 
 the median number of sports balls in a dumpster in 2017 is 8.
+
+# Problem 2
+
+``` r
+#read pols-month.csv
+pols = read_csv("./data/fivethirtyeight_datasets/fivethirtyeight_datasets/pols-month.csv")
+```
+
+    ## Rows: 822 Columns: 9
+
+    ## -- Column specification --------------------------------------------------------
+    ## Delimiter: ","
+    ## dbl  (8): prez_gop, gov_gop, sen_gop, rep_gop, prez_dem, gov_dem, sen_dem, r...
+    ## date (1): mon
+
+    ## 
+    ## i Use `spec()` to retrieve the full column specification for this data.
+    ## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+pols_tidy = 
+  pols %>% 
+  janitor::clean_names() %>% 
+  separate(mon, into = c("year","month","day")) %>% 
+  mutate(month=month.name[as.numeric(month)]) %>% 
+  mutate(president = prez_gop + prez_dem) %>% 
+  select(-prez_gop,-prez_dem,-day)
+```
