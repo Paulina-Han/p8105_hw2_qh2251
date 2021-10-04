@@ -91,10 +91,23 @@ pols_tidy =
   pols %>% 
   janitor::clean_names() %>% 
   separate(mon, into = c("year","month","day")) %>% 
-  mutate(month=month.name[as.numeric(month)]) %>% 
-  mutate(president = prez_gop + prez_dem) %>% 
-  select(-prez_gop,-prez_dem,-day)
-  
+  mutate(month=month.name[as.numeric(month)]) 
+
+#create a new vector president
+president = c()  
+for(i in 1:822){
+  if(pols_tidy$prez_dem[i] == 1){
+    president[i] = 'dem'
+  }else{
+    president[i] = 'gop'
+  }
+}
+#binding president with pols data
+pols_tidy = bind_cols(pols_tidy,president) 
+colnames(pols_tidy) = c(colnames(pols_tidy[1:11]),'president')
+#final data
+pols_tidy = select(pols_tidy,-day)
+
 #read snp.csv
 snp = read_csv("./data/fivethirtyeight_datasets/fivethirtyeight_datasets/snp.csv")
 
@@ -105,20 +118,28 @@ snp_tidy =
   separate(date, into = c("day","month","year")) %>% 
   mutate(month=month.name[as.numeric(month)]) %>% 
   relocate(year,month) %>% 
-  select(-day) #year is odd
+  select(-day)  
+#adding year
+snp_tidy$year = as.numeric(snp_tidy$year)
+for(i in 1:187){
+  snp_tidy$year[i] = snp_tidy$year[i]+2000
+} 
+for(i in 188:787){
+   snp_tidy$year[i] = snp_tidy$year[i]+1900
+  }
  
 
 #read unemployment data
-unemployment = read_csv("./data/fivethirtyeight_datasets/fivethirtyeight_datasets/unemployment.csv")
+unemployment = read.csv("./data/fivethirtyeight_datasets/fivethirtyeight_datasets/unemployment.csv")
 
 #clean unemployment data
 une_tidy = 
   unemployment %>% 
    janitor::clean_names() %>% 
   pivot_longer(
-    bdi_score_bl:bdi_score_12m,
-    names_to = "visit", 
-    values_to = "bdi")
+    unemployment$Jan: unemployment$Dec,
+    names_to = "month", 
+    values_to = "unemploy")
 
   
   
@@ -137,7 +158,7 @@ baby = read_csv("./data/Popular_Baby_Names.csv")
 baby_tidy = 
    baby %>% 
    janitor::clean_names() %>% 
-   mutate(gender = str_to_lower(gender), ethnicity = str_to_lower(ethnicity)) %>% 
+   mutate(gender = str_to_lower(gender), ethnicity = str_to_lower(ethnicity), childs_first_name = str_to_lower(childs_first_name)) %>% 
   mutate(
     ethnicity=replace(ethnicity,ethnicity == 'asian and paci','asian and pacific islander'),
      ethnicity=replace(ethnicity,ethnicity == 'black non hisp','black non hispanic'),
@@ -148,12 +169,12 @@ baby_tidy =
 
 Olivia = 
   baby_tidy %>% 
-  filter(childs_first_name == 'Olivia') %>% 
+  filter(childs_first_name == 'olivia') %>% 
   select(year_of_birth, ethnicity, rank) %>% 
   pivot_wider(
   names_from = "year_of_birth", 
   values_from = "rank") %>% 
-relocate(ethnicity,'2013','2014','2015','2016') %>% 
+relocate(ethnicity,'2011','2012','2013','2014','2015','2016') %>% 
  knitr::kable()
 
 Olivia
@@ -171,8 +192,21 @@ relocate(ethnicity,'2013','2014','2015','2016') %>%
  knitr::kable()
 #Ethan
 boy
- 
 
+#scatter plot 
+boy_2016_df = 
+  baby_tidy %>% 
+  filter(year_of_birth == 2016, gender == 'male', ethnicity == 'white non hispanic') 
+  
+ggplot(boy_2016_df, aes(x = rank, y = count )) + geom_point()
 
+#new data set
+new = 
+baby_tidy %>% 
+  filter(gender == 'male') %>% 
+  select(childs_first_name,rank,count,year_of_birth) %>% 
+  group_by(childs_first_name)%>% 
+  filter(childs_first_name == 'ethan')
+  
 ```
 
