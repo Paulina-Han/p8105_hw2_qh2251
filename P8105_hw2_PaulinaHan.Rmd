@@ -9,6 +9,7 @@ output: github_document
 library(tidyverse)
 library(readxl)
 library(haven)
+library(lubridate)
 ```
 
 # Problem 1
@@ -111,39 +112,24 @@ pols_tidy = select(pols_tidy,-day,-prez_dem,-prez_gop)
 #read snp.csv
 snp = read_csv("./data/fivethirtyeight_datasets/fivethirtyeight_datasets/snp.csv")
 
+
 #clean snp-month data
 snp_tidy = 
  snp %>% 
   janitor::clean_names() %>% 
-  separate(date, into = c("day","month","year")) %>% 
+  mutate(year=lubridate::mdy(date)) %>%  
+  separate(date, into = c("month","day","year")) %>%
+ mutate(year = ifelse(year < 50, paste("20", year, sep = ""),paste("19", year, sep = ""))) %>% 
   mutate(month=month.name[as.numeric(month)]) %>% 
   relocate(year,month) %>% 
   select(-day)  
 
 #adding year, not working for as.numeric(pull)
-pull(snp_tidy,as.numeric(year)) = as.numeric(pull(snp_tidy,year))
-for(i in 1:187){
- pull(snp_tidy,year)[i] = pull(snp_tidy,year)[i]+2000
-} 
-for(i in 188:787){
-  pull(snp_tidy,as.numeric(year))[i] = pull(snp_tidy,as.numeric(year))[i]+1900
-}
-#adding year with $
-snp_tidy$year = as.numeric(snp_tidy$year)
-for(i in 1:187){
- snp_tidy$year[i] = snp_tidy$year[i]+2000
-} 
-for(i in 188:787){
-  snp_tidy$year[i] = snp_tidy$year[i]+1900
-  }
-#adding the close in same month and year 
-#creating final data : snp_tidy2
-snp_tidy2 =
-  snp_tidy %>% 
-  group_by(year,month) %>% 
-mutate(stock = sum(close)) %>% 
-  select(-close) %>% 
-  distinct()
+snp_tidy =
+ snp_tidy %>% 
+mutate(year = as.numeric(year))
+
+
 
 #read unemployment data
 unemployment = read_csv("./data/fivethirtyeight_datasets/fivethirtyeight_datasets/unemployment.csv")
@@ -162,28 +148,21 @@ une_tidy =
 
 #merge snp into pols
 pols_tidy$year = as.numeric(pols_tidy$year)
-data_join = right_join(snp_tidy2, pols_tidy, by = c('year','month'))
+data_join = right_join(snp_tidy, pols_tidy, by = c('year','month'))
 
 #merge unemployment into the data set
 data_join2 = left_join(data_join, une_tidy, by = c('year','month'))
 
-#pols_tidy
-pols_tidy
 
-#snp_tidy2
-snp_tidy2
-
-#une_tidy2
-une_tidy
 ```
 
 The `pols_tidy` data set contains 9 columns and 822 rows.It includes the number of number of republican and democratic governors, number of republican and democratic senators, number of republican and democratic representatives in each month through 1947 to 2015.It also captured the president's political party of each month through 1947 to 2015 using `president` variable.
 
-The `snp_tidy2` data set contains 3 columns and 218 rows. It documents the sum of the closing values of the S&P stock index of associating month from 1950 to 2015 using `stock` variable.
+The `snp_tidy2` data set contains 3 columns and 787 rows. It documents the sum of the closing values of the S&P stock index of associating month from 1950 to 2015 using `close` variable.
 
 The `une_tidy` data set contains 3 columns and 816 rows. It contains the percentage of unemployment in the associating month from 1948 to 2015 using `unemploy` variable.
 
-The resulting data set ` data_join2` contains 11 columns and 822 rows. It is showing the sum of the closing values of the S&P stock index with `stock` variable, percentage of unemployment with `unemploy` variable, number of republican and democratic governors, number of republican and democratic senators, number of republican and democratic representatives, the president's political party of each month through 1947 to 2015 using `president` variable within the `pols_tidy` data set.
+The resulting data set ` data_join2` contains 11 columns and 822 rows. It is showing the closing values of the S&P stock index with `close` variable, percentage of unemployment with `unemploy` variable, number of republican and democratic governors, number of republican and democratic senators, number of republican and democratic representatives, the president's political party of each month through 1947 to 2015 using `president` variable within the `pols_tidy` data set.
 
 
 
@@ -222,12 +201,12 @@ Olivia
 boy =
   baby_tidy %>% 
   filter(gender == 'male') %>% 
-  filter(childs_first_name == "Ethan") %>% 
+  filter(childs_first_name == "ethan") %>% 
 select(year_of_birth, ethnicity, rank) %>% 
   pivot_wider(
   names_from = "year_of_birth", 
   values_from = "rank") %>% 
-relocate(ethnicity,'2013','2014','2015','2016') %>% 
+relocate(ethnicity,'2011','2012','2013','2014','2015','2016') %>% 
  knitr::kable()
 #Ethan
 boy
@@ -239,11 +218,6 @@ boy_2016_df =
   
 ggplot(boy_2016_df, aes(x = rank, y = count )) + geom_point()
 
-#new data set
-new = 
-baby_tidy %>% 
-  filter(gender == 'male') %>% 
-  filter(rank == 1)
   
 ```
 
