@@ -14,14 +14,14 @@ library(lubridate)
 
 # Problem 1
 ```{r, warning=FALSE}
-trash_df = read_excel("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet = "Mr. Trash Wheel",range = cell_cols("A:N")) #rows?
+trash_df = read_excel("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet = "Mr. Trash Wheel", range = cell_cols("A:N")) 
 
 #tidying trash data set
 trash_tidy = 
   trash_df %>% 
   janitor::clean_names() %>% 
   drop_na(dumpster) %>% 
-  rename(weight = weight_tons ,volume = volume_cubic_yards) %>% 
+  rename(weight = weight_tons, volume = volume_cubic_yards) %>% 
   mutate(sports_balls = round(sports_balls,0))
 
 #2019 precipitation
@@ -39,48 +39,57 @@ precipitation18_df = read_excel("./data/Trash-Wheel-Collection-Totals-8-6-19.xls
 
 #tidy 2018 precipitation data
 tidy_2018_df =
-  precipitation19_df %>% 
+  precipitation18_df %>% 
   janitor::clean_names() %>% 
   drop_na(total) %>% 
   mutate(year = 2018)  
 
 #combine precipitation data set
-preciptation = 
-  bind_rows(tidy_2018_df,tidy_2019_df) %>% 
- mutate(month=month.name[month])
+precipitation = 
+  bind_rows(tidy_2018_df, tidy_2019_df) %>% 
+ mutate(month = month.name[month])
 
 #description 
 #data set 1
 ncol_trash_tidy = ncol(trash_tidy)
 nrow_trash_tidy = nrow(trash_tidy)
 
-mean_weight = mean(pull(trash_tidy,weight))
-max_weight = max(pull(trash_tidy,weight))
-min_weight = min(pull(trash_tidy,weight))
+mean_weight = mean(pull(trash_tidy, weight))
+max_weight = max(pull(trash_tidy, weight))
+min_weight = min(pull(trash_tidy, weight))
 
-mean_volume = mean(pull(trash_tidy,volume))
-max_volume = max(pull(trash_tidy,volume))
-min_volume = min(pull(trash_tidy,volume))
+mean_volume = mean(pull(trash_tidy, volume))
+max_volume = max(pull(trash_tidy, volume))
+min_volume = min(pull(trash_tidy, volume))
+
 #data set 2
-ncol_preciptation = ncol(preciptation)
-nrow_preciptation = nrow(preciptation)
+ncol_precipitation = ncol(precipitation)
+nrow_precipitation = nrow(precipitation)
 
-max_rain = max(pull(preciptation,total))
+max_rain = max(pull(precipitation, total))
 
-#median of sports ball in 2017
+#median of sports ball in 2019
 ball =
   trash_tidy %>% 
-  filter(year==2017) %>% 
+  filter(year == 2019) %>% 
   pull(sports_balls) %>% 
   median()
 
+#total precipitation in 2018
+sum_2018 = precipitation %>% 
+  filter(year == '2018') %>% 
+  pull(total) %>% 
+  sum()
+
 ```
 
-The tidied Mr.Wheel Trash data set has `r ncol_trash_tidy` columns and `r nrow_trash_tidy ` rows. The mean weight of trash the dumpster took is `r mean_weight` and the maximum weight of trash the dumpster took is `r max_weight`, the minimum weight of trash the dumpster took is `r min_weight`. The mean volume of trash the dumpster took is `r mean_volume`, the maximum volume of trash the dumpster took is `r max_volume` and the minimum volume of trash the dumpster took is `r min_volume`.
+The tidied Mr.Wheel Trash data set has `r ncol_trash_tidy` columns and `r nrow_trash_tidy ` observations. The mean weight of trash the dumpster took is `r mean_weight` and the maximum weight of trash the dumpster took is `r max_weight`, the minimum weight of trash the dumpster took is `r min_weight`. The mean volume of trash the dumpster took is `r mean_volume`, the maximum volume of trash the dumpster took is `r max_volume` and the minimum volume of trash the dumpster took is `r min_volume`.
 
-The precipitation data set including 2018 and 2019 has `r ncol_preciptation` columns and `r nrow_preciptation` rows. 2018 March had the most preciptation in 2018 and 2019 which is `r max_rain`.
+The precipitation data set including 2018 and 2019 has `r ncol_precipitation` columns and `r nrow_precipitation` observations. 2018 March had the most precipitation in 2018 and 2019 which is `r max_rain`.
 
-the median number of sports balls in a dumpster in 2017 is `r ball`.
+The median number of sports balls in a dumpster in 2019 is `r ball`.
+
+The total precipitation in 2018 is `r sum_2018`.
 
 # Problem 2
 ```{r}
@@ -104,32 +113,24 @@ for(i in 1:822){
   }
 }
 #binding president with pols data
-pols_tidy = bind_cols(pols_tidy,president) 
-colnames(pols_tidy) = c(colnames(pols_tidy[1:11]),'president')
+pols_tidy = bind_cols(pols_tidy, president) 
+colnames(pols_tidy) = c(colnames(pols_tidy[1:11]), 'president')
 #final data
-pols_tidy = select(pols_tidy,-day,-prez_dem,-prez_gop)
+pols_tidy = select(pols_tidy, -day, -prez_dem, -prez_gop)
 
 #read snp.csv
 snp = read_csv("./data/fivethirtyeight_datasets/fivethirtyeight_datasets/snp.csv")
-
 
 #clean snp-month data
 snp_tidy = 
  snp %>% 
   janitor::clean_names() %>% 
-  mutate(year=lubridate::mdy(date)) %>%  
+  mutate(year = lubridate::mdy(date)) %>%  
   separate(date, into = c("month","day","year")) %>%
  mutate(year = ifelse(year < 50, paste("20", year, sep = ""),paste("19", year, sep = ""))) %>% 
-  mutate(month=month.name[as.numeric(month)]) %>% 
-  relocate(year,month) %>% 
+  mutate(month = month.name[as.numeric(month)]) %>% 
+  relocate(year, month) %>% 
   select(-day)  
-
-#adding year, not working for as.numeric(pull)
-snp_tidy =
- snp_tidy %>% 
-mutate(year = as.numeric(year))
-
-
 
 #read unemployment data
 unemployment = read_csv("./data/fivethirtyeight_datasets/fivethirtyeight_datasets/unemployment.csv")
@@ -144,21 +145,23 @@ une_tidy =
     values_to = "unemploy") %>% 
   mutate(month = str_to_title(month)) %>% 
     mutate(month = match(month,month.abb)) %>% 
-  mutate(month = month.name[month])
+  mutate(month = month.name[month]) %>% 
+  mutate(year = as.character(year))
 
 #merge snp into pols
-pols_tidy$year = as.numeric(pols_tidy$year)
 data_join = right_join(snp_tidy, pols_tidy, by = c('year','month'))
 
 #merge unemployment into the data set
-data_join2 = left_join(data_join, une_tidy, by = c('year','month'))
+data_join2 = 
+  left_join(data_join, une_tidy, by = c('year','month')) %>% 
+  arrange(desc(year))
 
 
 ```
 
-The `pols_tidy` data set contains 9 columns and 822 rows.It includes the number of number of republican and democratic governors, number of republican and democratic senators, number of republican and democratic representatives in each month through 1947 to 2015.It also captured the president's political party of each month through 1947 to 2015 using `president` variable.
+The `pols_tidy` data set contains 9 columns and 822 rows.It includes the number of republican and democratic governors,senators,representatives in each month through 1947 to 2015.It also captured the president's political party of each month through 1947 to 2015 using `president` variable.
 
-The `snp_tidy2` data set contains 3 columns and 787 rows. It documents the sum of the closing values of the S&P stock index of associating month from 1950 to 2015 using `close` variable.
+The `snp_tidy` data set contains 3 columns and 787 rows. It documents the sum of the closing values of the S&P stock index of associating month from 1950 to 2015 using `close` variable.
 
 The `une_tidy` data set contains 3 columns and 816 rows. It contains the percentage of unemployment in the associating month from 1948 to 2015 using `unemploy` variable.
 
@@ -178,13 +181,12 @@ baby_tidy =
    janitor::clean_names() %>% 
    mutate(gender = str_to_lower(gender), ethnicity = str_to_lower(ethnicity), childs_first_name = str_to_lower(childs_first_name)) %>% 
   mutate(
-    ethnicity=replace(ethnicity,ethnicity == 'asian and paci','asian and pacific islander'),
-     ethnicity=replace(ethnicity,ethnicity == 'black non hisp','black non hispanic'),
-    ethnicity=replace(ethnicity,ethnicity == 'white non hisp','white non hispanic') ) %>% 
+    ethnicity = replace(ethnicity,ethnicity == 'asian and paci','asian and pacific islander'),
+     ethnicity = replace(ethnicity,ethnicity == 'black non hisp','black non hispanic'),
+    ethnicity = replace(ethnicity,ethnicity == 'white non hisp','white non hispanic') ) %>% 
   distinct()
 
 # show Olivia's population in times
-
 Olivia = 
   baby_tidy %>% 
   filter(childs_first_name == 'olivia') %>% 
@@ -216,7 +218,9 @@ boy_2016_df =
   baby_tidy %>% 
   filter(year_of_birth == 2016, gender == 'male', ethnicity == 'white non hispanic') 
   
-ggplot(boy_2016_df, aes(x = rank, y = count )) + geom_point()
+ggplot(boy_2016_df, aes(x = rank, y = count )) + 
+  geom_point() +
+  geom_text(label = pull(boy_2016_df,childs_first_name), nudge_x = 0.25, nudge_y = 0.25, check_overlap = T)
 
   
 ```
