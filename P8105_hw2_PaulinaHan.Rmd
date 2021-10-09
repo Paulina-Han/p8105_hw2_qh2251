@@ -14,7 +14,7 @@ library(lubridate)
 
 # Problem 1
 ```{r, warning=FALSE}
-trash_df = read_excel("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet = "Mr. Trash Wheel", range = cell_cols("A:N")) 
+trash_df = read_excel("./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", sheet = "Mr. Trash Wheel", range = cell_cols("A:N")) 
 
 #tidying trash data set
 trash_tidy = 
@@ -25,7 +25,7 @@ trash_tidy =
   mutate(sports_balls = round(sports_balls,0))
 
 #2019 precipitation
-precipitation19_df = read_excel("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",sheet = "2019 Precipitation", range = "A2:B14")
+precipitation19_df = read_excel("./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx",sheet = "2019 Precipitation", range = "A2:B14")
 
 #tidy 2019 precipitation data
 tidy_2019_df =
@@ -35,7 +35,7 @@ tidy_2019_df =
   mutate(year = 2019)
   
 #2018 precipitation
-precipitation18_df = read_excel("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",sheet = "2018 Precipitation", range = "A2:B14")
+precipitation18_df = read_excel("./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx",sheet = "2018 Precipitation", range = "A2:B14")
 
 #tidy 2018 precipitation data
 tidy_2018_df =

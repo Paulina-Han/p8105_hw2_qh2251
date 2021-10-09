@@ -6,7 +6,7 @@ Paulina Han
 # Problem 1
 
 ``` r
-trash_df = read_excel("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet = "Mr. Trash Wheel", range = cell_cols("A:N")) 
+trash_df = read_excel("./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", sheet = "Mr. Trash Wheel", range = cell_cols("A:N")) 
 
 #tidying trash data set
 trash_tidy = 
@@ -17,7 +17,7 @@ trash_tidy =
   mutate(sports_balls = round(sports_balls,0))
 
 #2019 precipitation
-precipitation19_df = read_excel("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",sheet = "2019 Precipitation", range = "A2:B14")
+precipitation19_df = read_excel("./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx",sheet = "2019 Precipitation", range = "A2:B14")
 
 #tidy 2019 precipitation data
 tidy_2019_df =
@@ -27,7 +27,7 @@ tidy_2019_df =
   mutate(year = 2019)
   
 #2018 precipitation
-precipitation18_df = read_excel("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",sheet = "2018 Precipitation", range = "A2:B14")
+precipitation18_df = read_excel("./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx",sheet = "2018 Precipitation", range = "A2:B14")
 
 #tidy 2018 precipitation data
 tidy_2018_df =
@@ -60,7 +60,7 @@ nrow_precipitation = nrow(precipitation)
 
 max_rain = max(pull(precipitation, total))
 
-#median of sports ball in 2017
+#median of sports ball in 2019
 ball =
   trash_tidy %>% 
   filter(year == 2019) %>% 
@@ -74,18 +74,18 @@ sum_2018 = precipitation %>%
   sum()
 ```
 
-The tidied Mr.Wheel Trash data set has 14 columns and 344 observations.
-The mean weight of trash the dumpster took is 3.262936 and the maximum
-weight of trash the dumpster took is 5.62, the minimum weight of trash
-the dumpster took is 0.96. The mean volume of trash the dumpster took is
-15.5436047, the maximum volume of trash the dumpster took is 20 and the
-minimum volume of trash the dumpster took is 7.
+The tidied Mr.Wheel Trash data set has 14 columns and 454 observations.
+The mean weight of trash the dumpster took is 6.3863436 and the maximum
+weight of trash the dumpster took is 1449.7, the minimum weight of trash
+the dumpster took is 0.78. The mean volume of trash the dumpster took is
+30.7577093, the maximum volume of trash the dumpster took is 6982 and
+the minimum volume of trash the dumpster took is 7.
 
-The precipitation data set including 2018 and 2019 has 3 columns and 18
+The precipitation data set including 2018 and 2019 has 3 columns and 24
 observations. 2018 March had the most precipitation in 2018 and 2019
 which is 10.47.
 
-The median number of sports balls in a dumpster in 2019 is 8.5.
+The median number of sports balls in a dumpster in 2019 is 9.
 
 The total precipitation in 2018 is 70.33.
 
@@ -247,9 +247,9 @@ baby_tidy =
    janitor::clean_names() %>% 
    mutate(gender = str_to_lower(gender), ethnicity = str_to_lower(ethnicity), childs_first_name = str_to_lower(childs_first_name)) %>% 
   mutate(
-    ethnicity=replace(ethnicity,ethnicity == 'asian and paci','asian and pacific islander'),
-     ethnicity=replace(ethnicity,ethnicity == 'black non hisp','black non hispanic'),
-    ethnicity=replace(ethnicity,ethnicity == 'white non hisp','white non hispanic') ) %>% 
+    ethnicity = replace(ethnicity,ethnicity == 'asian and paci','asian and pacific islander'),
+     ethnicity = replace(ethnicity,ethnicity == 'black non hisp','black non hispanic'),
+    ethnicity = replace(ethnicity,ethnicity == 'white non hisp','white non hispanic') ) %>% 
   distinct()
 
 # show Olivia's population in times
