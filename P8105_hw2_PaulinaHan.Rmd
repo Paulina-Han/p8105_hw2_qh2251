@@ -85,7 +85,7 @@ sum_2018 = precipitation %>%
 
 The tidied Mr.Wheel Trash data set has `r ncol_trash_tidy` columns and `r nrow_trash_tidy ` observations. The mean weight of trash the dumpster took is `r mean_weight` and the maximum weight of trash the dumpster took is `r max_weight`, the minimum weight of trash the dumpster took is `r min_weight`. The mean volume of trash the dumpster took is `r mean_volume`, the maximum volume of trash the dumpster took is `r max_volume` and the minimum volume of trash the dumpster took is `r min_volume`.
 
-The precipitation data set including 2018 and 2019 has `r ncol_precipitation` columns and `r nrow_precipitation` observations. 2018 March had the most precipitation in 2018 and 2019 which is `r max_rain`.
+The precipitation data set including 2018 and 2019 has `r ncol_precipitation` columns and `r nrow_precipitation` observations. 2018 Sep had the most precipitation in 2018 and 2019 which is `r max_rain`.
 
 The median number of sports balls in a dumpster in 2019 is `r ball`.
 

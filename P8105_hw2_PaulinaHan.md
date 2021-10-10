@@ -82,8 +82,8 @@ the dumpster took is 0.78. The mean volume of trash the dumpster took is
 the minimum volume of trash the dumpster took is 7.
 
 The precipitation data set including 2018 and 2019 has 3 columns and 24
-observations. 2018 March had the most precipitation in 2018 and 2019
-which is 10.47.
+observations. 2018 Sep had the most precipitation in 2018 and 2019 which
+is 10.47.
 
 The median number of sports balls in a dumpster in 2019 is 9.
 
